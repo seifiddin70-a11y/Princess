@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magic Princess 👑</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:"Trebuchet MS",Arial,sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%,#ffd8f0 0 8%,transparent 9%),
+        radial-gradient(circle at 80% 15%,#dcd1ff 0 7%,transparent 8%),
+        linear-gradient(135deg,#ffe7f3,#e8ddff,#dff5ff);
+    min-height:100vh;
+    color:#54294f;
+    overflow-x:hidden;
+}
+
+body.dark{
+    background:linear-gradient(135deg,#19152e,#29203f,#171a31);
+    color:#fff;
+}
+
+button{
+    font-family:inherit;
+}
+
+/* النجوم */
+.star{
+    position:fixed;
+    color:white;
+    font-size:20px;
+    animation:twinkle 2s infinite alternate;
+    pointer-events:none;
+}
+
+@keyframes twinkle{
+    from{opacity:.2;transform:scale(.7);}
+    to{opacity:1;transform:scale(1.3);}
+}
+
+/* البداية */
+#startScreen{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        radial-gradient(circle at 50% 30%,#fff 0,#ffe0f0 20%,transparent 45%),
+        linear-gradient(135deg,#bda6ff,#ffafd3);
+    text-align:center;
+    padding:20px;
+}
+
+.startBox{
+    width:min(700px,95%);
+    padding:45px 25px;
+    border-radius:35px;
+    background:rgba(255,255,255,.86);
+    box-shadow:0 25px 70px rgba(72,30,90,.3);
+}
+
+.startBox .crown{
+    font-size:70px;
+    animation:float 2s infinite ease-in-out;
+}
+
+@keyframes float{
+    50%{transform:translateY(-12px);}
+}
+
+.startBox h1{
+    font-size:clamp(35px,7vw,65px);
+    margin:10px 0;
+    color:#b73782;
+}
+
+.startBox p{
+    font-size:19px;
+    line-height:1.8;
+}
+
+.startBtn{
+    border:0;
+    padding:16px 40px;
+    border-radius:50px;
+    background:linear-gradient(90deg,#df4d9c,#8c65e8);
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+    box-shadow:0 8px 20px #bd79b5;
+    transition:.3s;
+}
+
+.startBtn:hover{
+    transform:scale(1.07);
+}
+
+/* الهيدر */
+header{
+    padding:18px;
+    text-align:center;
+    background:rgba(255,255,255,.65);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,.6);
+}
+
+header h1{
+    margin:0;
+    color:#b73782;
+}
+
+.topBar{
+    max-width:1200px;
+    margin:12px auto 0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.score{
+    background:white;
+    padding:9px 17px;
+    border-radius:30px;
+    box-shadow:0 4px 15px #0001;
+    font-weight:bold;
+}
+
+.smallBtn{
+    border:0;
+    padding:9px 15px;
+    border-radius:25px;
+    cursor:pointer;
+    background:#fff;
+}
+
+/* اللعبة */
+.game{
+    width:min(1200px,96%);
+    margin:20px auto;
+    display:grid;
+    grid-template-columns:430px 1fr;
+    gap:20px;
+}
+
+/* منطقة الأميرة */
+.stage{
+    position:relative;
+    min-height:650px;
+    border-radius:35px;
+    background:
+        radial-gradient(circle at 50% 20%,#fff8fd 0 20%,transparent 21%),
+        linear-gradient(180deg,#f5dfff,#d9d5ff);
+    box-shadow:0 15px 40px #5d3b7a33;
+    overflow:hidden;
+    text-align:center;
+}
+
+.stage h2{
+    margin:18px 0 0;
+    position:relative;
+    z-index:20;
+    color:#9b3b80;
+}
+
+.stage:before,
+.stage:after{
+    content:"✦";
+    position:absolute;
+    font-size:35px;
+    color:#fff;
+    animation:float 3s infinite;
+}
+
+.stage:before{left:25px;top:80px;}
+.stage:after{right:25px;top:150px;}
+
+/* العروسة */
+.doll{
+    position:relative;
+    width:300px;
+    height:540px;
+    margin:5px auto 0;
+}
+
+/* الشعر الخلفي */
+.hairBack{
+    position:absolute;
+    width:145px;
+    height:190px;
+    left:77px;
+    top:55px;
+    border-radius:70px 70px 45px 45px;
+    background:#5a3527;
+    z-index:2;
+    box-shadow:
+        -20px 25px 0 -5px #5a3527,
