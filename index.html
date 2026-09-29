@@ -1,129 +1,172 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مفتاح القصر</title>
+<style>
+body{margin:0;font-family:Arial;background:linear-gradient(135deg,#24143d,#56336d);
+color:white;text-align:center;min-height:100vh}
+.box{width:90%;max-width:650px;margin:70px auto;background:#ffffff18;
+padding:30px;border-radius:25px;box-shadow:0 10px 30px #0008}
+h1{color:#ffd86b;font-size:40px}
+.girl{font-size:80px}
+p{font-size:19px;line-height:1.9}
+button{background:#ffd86b;border:0;padding:13px 30px;border-radius:20px;
+font-size:18px;font-weight:bold;cursor:pointer;margin:8px}
+button:hover{transform:scale(1.05)}
+input{width:80%;padding:14px;border-radius:15px;border:0;
+font-size:18px;text-align:center;margin:15px}
+.key{font-size:35px;margin:20px}
+.part{opacity:.25;margin:5px}
+.done{opacity:1}
+#game,#win{display:none}
+.message{font-size:18px;min-height:30px}
+</style>
+</head>
 
-    <title>مفتاح القصر المفقود</title>
+<body>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<div id="start" class="box">
+<div class="girl">👸</div>
+<h1>مفتاح القصر المفقود</h1>
+<p>
+كانت الأميرة ليان تحاول العودة إلى قصرها،
+لكن بوابة القصر أغلقت بطريقة سحرية.
+<br>
+لن تستطيع الوصول إلى القصر إلا إذا حلت ثلاثة ألغاز
+وجمعت أجزاء المفتاح السحري 🔑
+</p>
+<button onclick="startGame()">ابدئي المغامرة ✨</button>
+</div>
 
-        body {
-            font-family: "Tahoma", Arial, sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-            background: #17152b;
-            color: white;
-        }
+<div id="game" class="box">
+<div class="girl">👸</div>
+<h2 id="level">اللغز الأول</h2>
+<div class="key">
+<span id="k1" class="part">🔑</span>
+<span id="k2" class="part">🔑</span>
+<span id="k3" class="part">🔑</span>
+</div>
 
-        /* الخلفية */
-        .game {
-            min-height: 100vh;
-            position: relative;
-            overflow: hidden;
-            background:
-                radial-gradient(circle at 20% 20%, rgba(120, 91, 180, 0.35), transparent 30%),
-                radial-gradient(circle at 80% 30%, rgba(80, 110, 180, 0.25), transparent 30%),
-                linear-gradient(160deg, #16132b, #29204b 55%, #101020);
-        }
+<h2 id="question"></h2>
 
-        /* النجوم */
-        .star {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
-            animation: twinkle 2s infinite alternate;
-        }
+<input id="answer" placeholder="اكتبي إجابتك هنا">
 
-        .star:nth-child(1) { top: 10%; left: 10%; }
-        .star:nth-child(2) { top: 20%; left: 25%; animation-delay: .5s; }
-        .star:nth-child(3) { top: 12%; left: 75%; animation-delay: 1s; }
-        .star:nth-child(4) { top: 35%; left: 88%; animation-delay: .3s; }
-        .star:nth-child(5) { top: 60%; left: 8%; animation-delay: .8s; }
-        .star:nth-child(6) { top: 70%; left: 80%; animation-delay: 1.2s; }
-        .star:nth-child(7) { top: 82%; left: 30%; animation-delay: .4s; }
-        .star:nth-child(8) { top: 45%; left: 45%; animation-delay: 1.5s; }
-        .star:nth-child(9) { top: 15%; left: 50%; animation-delay: .7s; }
-        .star:nth-child(10) { top: 90%; left: 65%; animation-delay: 1.1s; }
+<br>
 
-        @keyframes twinkle {
-            from { opacity: .2; transform: scale(.7); }
-            to { opacity: 1; transform: scale(1.3); }
-        }
+<button id="check" onclick="checkAnswer()">تحقق من الإجابة 🔍</button>
 
-        /* الصفحة */
-        .screen {
-            min-height: 100vh;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 25px;
-            position: relative;
-            z-index: 2;
-        }
+<button id="next" onclick="nextPuzzle()" style="display:none">
+اللغز التالي ➜
+</button>
 
-        .screen.active {
-            display: flex;
-        }
+<div id="message" class="message"></div>
+</div>
 
-        /* بطاقة البداية */
-        .intro-card {
-            width: min(700px, 95%);
-            text-align: center;
-            padding: 45px 30px;
-            border-radius: 30px;
-            background: rgba(25, 21, 50, 0.88);
-            border: 1px solid rgba(255,255,255,.15);
-            box-shadow: 0 20px 60px rgba(0,0,0,.4);
-            backdrop-filter: blur(12px);
-        }
+<div id="win" class="box">
+<div class="girl">👸</div>
+<div style="font-size:90px">🏰</div>
+<h1>وصلتِ إلى القصر! 👑</h1>
+<p>
+أحسنتِ يا ليان! 🎉
+<br>
+لقد حللتِ الألغاز الثلاثة وجمعتِ المفتاح السحري.
+<br>
+أصبحت بوابة قصرك مفتوحة من جديد! 🔑✨
+</p>
+<button onclick="location.reload()">العب من جديد 🔄</button>
+</div>
 
-        .crown {
-            font-size: 75px;
-            margin-bottom: 10px;
-            animation: float 3s ease-in-out infinite;
-        }
+<script>
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
+let puzzle=0;
 
-        h1 {
-            font-size: clamp(30px, 7vw, 55px);
-            margin-bottom: 15px;
-        }
+let questions=[
+"شيء له أسنان ولا يعض، ما هو؟",
+"شيء كلما أخذتِ منه كبر، ما هو؟",
+"شيء يمشي بلا أرجل ويبكي بلا عيون، ما هو؟"
+];
 
-        .gold {
-            color: #ffd76a;
-        }
+let answers=[
+["مشط","المشط"],
+["حفرة","الحفرة"],
+["السحاب","سحاب","الغيم"]
+];
 
-        .story {
-            line-height: 2;
-            color: #ddd8ec;
-            font-size: 17px;
-            margin: 20px auto;
-            max-width: 580px;
-        }
+function startGame(){
+document.getElementById("start").style.display="none";
+document.getElementById("game").style.display="block";
+showPuzzle();
+}
 
-        .start-btn,
-        .next-btn,
-        .restart-btn {
-            border: none;
-            padding: 15px 35px;
-            border-radius: 50px;
-            background: linear-gradient(135deg, #f5c75d, #d99532);
-            color: #24182b;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: .25s;
-            box-shadow: 0 8px 20px rgba(0,0,0,.25)};
+function showPuzzle(){
+document.getElementById("level").innerText=
+"اللغز "+(puzzle+1)+" من 3";
+
+document.getElementById("question").innerText=
+questions[puzzle];
+
+document.getElementById("answer").value="";
+
+document.getElementById("message").innerText="";
+
+document.getElementById("check").style.display="inline-block";
+
+document.getElementById("next").style.display="none";
+}
+
+function checkAnswer(){
+
+let user=document.getElementById("answer").value
+.trim().toLowerCase();
+
+if(user===""){
+document.getElementById("message").innerText=
+"اكتبي إجابتك أولًا 💡";
+return;
+}
+
+if(answers[puzzle].includes(user)){
+
+document.getElementById("message").innerText=
+"🎉 أحسنتِ! إجابة صحيحة، حصلتِ على جزء من المفتاح 🔑";
+
+document.getElementById("k"+(puzzle+1))
+.classList.add("done");
+
+document.getElementById("check").style.display="none";
+
+if(puzzle<2){
+document.getElementById("next").style.display="inline-block";
+}else{
+document.getElementById("next").innerText=
+"افتحي بوابة القصر 🏰";
+document.getElementById("next").style.display="inline-block";
+}
+
+}else{
+
+document.getElementById("message").innerText=
+"❌ إجابة غير صحيحة، حاولي مرة أخرى 💪";
+
+}
+}
+
+function nextPuzzle(){
+
+puzzle++;
+
+if(puzzle>=3){
+document.getElementById("game").style.display="none";
+document.getElementById("win").style.display="block";
+}else{
+showPuzzle();
+}
+
+}
+
+</script>
+
+</body>
+</html>
