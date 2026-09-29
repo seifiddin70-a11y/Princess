@@ -2,169 +2,170 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مفتاح القصر</title>
+<title>لعبة جمع التفاح</title>
+
 <style>
-body{margin:0;font-family:Arial;background:linear-gradient(135deg,#24143d,#56336d);
-color:white;text-align:center;min-height:100vh}
-.box{width:90%;max-width:650px;margin:70px auto;background:#ffffff18;
-padding:30px;border-radius:25px;box-shadow:0 10px 30px #0008}
-h1{color:#ffd86b;font-size:40px}
-.girl{font-size:80px}
-p{font-size:19px;line-height:1.9}
-button{background:#ffd86b;border:0;padding:13px 30px;border-radius:20px;
-font-size:18px;font-weight:bold;cursor:pointer;margin:8px}
-button:hover{transform:scale(1.05)}
-input{width:80%;padding:14px;border-radius:15px;border:0;
-font-size:18px;text-align:center;margin:15px}
-.key{font-size:35px;margin:20px}
-.part{opacity:.25;margin:5px}
-.done{opacity:1}
-#game,#win{display:none}
-.message{font-size:18px;min-height:30px}
+body{
+    margin:0;
+    font-family:Arial;
+    background:linear-gradient(#8ed8ff,#e8f8ff);
+    text-align:center;
+}
+
+h1{color:#7b3f00}
+
+#game{
+    width:90%;
+    max-width:600px;
+    height:500px;
+    margin:auto;
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(#bdeaff 70%,#72c45a 70%);
+    border:4px solid #654321;
+    border-radius:20px;
+}
+
+#girl{
+    position:absolute;
+    bottom:15px;
+    left:45%;
+    font-size:60px;
+}
+
+#apple{
+    position:absolute;
+    top:0;
+    left:50%;
+    font-size:35px;
+}
+
+#score{
+    font-size:22px;
+    font-weight:bold;
+    margin:10px;
+}
+
+button{
+    padding:12px 25px;
+    margin:10px;
+    border:0;
+    border-radius:15px;
+    background:#ffcc55;
+    font-size:18px;
+    cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<div id="start" class="box">
-<div class="girl">👸</div>
-<h1>مفتاح القصر المفقود</h1>
-<p>
-كانت الأميرة ليان تحاول العودة إلى قصرها،
-لكن بوابة القصر أغلقت بطريقة سحرية.
-<br>
-لن تستطيع الوصول إلى القصر إلا إذا حلت ثلاثة ألغاز
-وجمعت أجزاء المفتاح السحري 🔑
-</p>
-<button onclick="startGame()">ابدئي المغامرة ✨</button>
+<h1>🍎 لعبة جمع التفاح 🍎</h1>
+
+<div id="score">النقاط: 0 / 5</div>
+
+<div id="game">
+    <div id="apple">🍎</div>
+    <div id="girl">👧🧺</div>
 </div>
 
-<div id="game" class="box">
-<div class="girl">👸</div>
-<h2 id="level">اللغز الأول</h2>
-<div class="key">
-<span id="k1" class="part">🔑</span>
-<span id="k2" class="part">🔑</span>
-<span id="k3" class="part">🔑</span>
-</div>
+<button onclick="moveLeft()">⬅️ يسار</button>
+<button onclick="moveRight()">يمين ➡️</button>
 
-<h2 id="question"></h2>
-
-<input id="answer" placeholder="اكتبي إجابتك هنا">
-
-<br>
-
-<button id="check" onclick="checkAnswer()">تحقق من الإجابة 🔍</button>
-
-<button id="next" onclick="nextPuzzle()" style="display:none">
-اللغز التالي ➜
-</button>
-
-<div id="message" class="message"></div>
-</div>
-
-<div id="win" class="box">
-<div class="girl">👸</div>
-<div style="font-size:90px">🏰</div>
-<h1>وصلتِ إلى القصر! 👑</h1>
-<p>
-أحسنتِ يا ليان! 🎉
-<br>
-لقد حللتِ الألغاز الثلاثة وجمعتِ المفتاح السحري.
-<br>
-أصبحت بوابة قصرك مفتوحة من جديد! 🔑✨
-</p>
-<button onclick="location.reload()">العب من جديد 🔄</button>
-</div>
+<h2 id="message"></h2>
 
 <script>
 
-let puzzle=0;
+let score = 0;
+let appleTop = 0;
+let appleLeft = Math.random() * 90;
+let girlLeft = 45;
 
-let questions=[
-"شيء له أسنان ولا يعض، ما هو؟",
-"شيء كلما أخذتِ منه كبر، ما هو؟",
-"شيء يمشي بلا أرجل ويبكي بلا عيون، ما هو؟"
-];
+const apple = document.getElementById("apple");
+const girl = document.getElementById("girl");
+const scoreText = document.getElementById("score");
+const message = document.getElementById("message");
 
-let answers=[
-["مشط","المشط"],
-["حفرة","الحفرة"],
-["السحاب","سحاب","الغيم"]
-];
+function newApple(){
 
-function startGame(){
-document.getElementById("start").style.display="none";
-document.getElementById("game").style.display="block";
-showPuzzle();
+    appleTop = 0;
+    appleLeft = Math.random() * 90;
+
+    apple.style.top = appleTop + "%";
+    apple.style.left = appleLeft + "%";
 }
 
-function showPuzzle(){
-document.getElementById("level").innerText=
-"اللغز "+(puzzle+1)+" من 3";
+function moveLeft(){
 
-document.getElementById("question").innerText=
-questions[puzzle];
+    girlLeft -= 7;
 
-document.getElementById("answer").value="";
+    if(girlLeft < 0)
+        girlLeft = 0;
 
-document.getElementById("message").innerText="";
-
-document.getElementById("check").style.display="inline-block";
-
-document.getElementById("next").style.display="none";
+    girl.style.left = girlLeft + "%";
 }
 
-function checkAnswer(){
+function moveRight(){
 
-let user=document.getElementById("answer").value
-.trim().toLowerCase();
+    girlLeft += 7;
 
-if(user===""){
-document.getElementById("message").innerText=
-"اكتبي إجابتك أولًا 💡";
-return;
+    if(girlLeft > 85)
+        girlLeft = 85;
+
+    girl.style.left = girlLeft + "%";
 }
 
-if(answers[puzzle].includes(user)){
+document.addEventListener("keydown",function(e){
 
-document.getElementById("message").innerText=
-"🎉 أحسنتِ! إجابة صحيحة، حصلتِ على جزء من المفتاح 🔑";
+    if(e.key === "ArrowLeft")
+        moveLeft();
 
-document.getElementById("k"+(puzzle+1))
-.classList.add("done");
+    if(e.key === "ArrowRight")
+        moveRight();
 
-document.getElementById("check").style.display="none";
+});
 
-if(puzzle<2){
-document.getElementById("next").style.display="inline-block";
-}else{
-document.getElementById("next").innerText=
-"افتحي بوابة القصر 🏰";
-document.getElementById("next").style.display="inline-block";
+function fall(){
+
+    appleTop += 1;
+
+    apple.style.top = appleTop + "%";
+
+    let appleX = appleLeft;
+    let girlX = girlLeft;
+
+    if(
+        appleTop > 82 &&
+        Math.abs(appleX - girlX) < 12
+    ){
+
+        score++;
+
+        scoreText.innerText =
+            "النقاط: " + score + " / 5";
+
+        if(score === 5){
+
+            message.innerText =
+                "🎉 أحسنتِ! جمعتِ كل التفاح! 🍎🏆";
+
+            apple.style.display = "none";
+
+            return;
+        }
+
+        newApple();
+    }
+
+    if(appleTop > 100){
+
+        newApple();
+    }
 }
 
-}else{
+setInterval(fall,40);
 
-document.getElementById("message").innerText=
-"❌ إجابة غير صحيحة، حاولي مرة أخرى 💪";
-
-}
-}
-
-function nextPuzzle(){
-
-puzzle++;
-
-if(puzzle>=3){
-document.getElementById("game").style.display="none";
-document.getElementById("win").style.display="block";
-}else{
-showPuzzle();
-}
-
-}
+newApple();
 
 </script>
 
